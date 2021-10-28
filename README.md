@@ -49,6 +49,10 @@ La secuencia de comandos para la implementación está en el archivo comandos.tx
 - O terminar el cluster Kubernetes y volverlo a desplegar para comprobar que la BD es permanente y no se pierde con esto.
 - En realidad 14 comandos son muchos. Los archivos yaml se pueden consolidar, hacer scripts. Si lo intentan, por favor, déjenme saber en avaco.digital@ gmail.com
 
+## Actualización (desplegar con un solo un comando)
+
+Se adiciona un archivo batch para desplegar todo con un solo comando, comandos.bat (para Windows aunque debe funcionar con pequeños cambios en Linux o Mac). Utiliza el archivo yaml "concentrado" completo.yaml
+
   
 
 
