@@ -18,7 +18,7 @@ La secuencia de comandos para la implementación está en el archivo comandos.tx
 - Si un pod termina y se recrea puede caer en otro nodo del cluster Kubernetes, pero esto no importa, porque la referencia siempre llevará al correspondiente subdirectorio de nuestra computadora. Si termina y se reinicia el cluster Kubernetes, los subdirectorios y su contenido permanecen, nuestra BD es permanente (eso espero).
 - Tener una base de datos en replica set sin poder probarla y "jugar" con ella no es nada. Así que creamos un "micro-servicio" en Go que la utiliza (el código en go-client). Es muy sencillo, expone en el puerto 8080 una mini-interfase "REST". Con un GET lista los nombres de los miembros de la colección personas de la base de datos prueba. Con un POST crea una persona (sólo registra el nombre) y de paso, la primera vez, la base de datos y la colección. En ese directorio está también el DockerFile para crear la imagen go-mongo-client que cargamos en Kind (línea 9)
 - Creamos un deployment con dos réplicas (pods) de nuestro micro-servicio (línea 10) y para que sea accesible en el cluster creamos el correspondiente servicio (línea 11)
-- Para hacerlo accesible en nuestra computadora, desplegamos Ingress en el cluster (pasos 12, 13 y 14) siguienso las indicaciones de Kind (que necesita la cláusula extraPortMappings en el config.yaml usado para crear el cluster)
+- Para hacerlo accesible en nuestra computadora, y balancear entre las dos réplicas, desplegamos Ingress en el cluster (pasos 12, 13 y 14) siguiendo las indicaciones de Kind (que necesita la cláusula extraPortMappings en el config.yaml usado para crear el cluster)
 - Ahora podemos probar:
 ```
     curl -X POST localhost/Juan
@@ -43,7 +43,7 @@ La secuencia de comandos para la implementación está en el archivo comandos.tx
 ```
 - En estos casos la base de datos permanece operativa y se reconstruye (a lo mejor una petición demora algo mientras se reconfigura el cluster y el réplica set de MongoDB)
 - O terminar el cluster Kubernetes y volverlo a desplegar para comprobar que la BD es permanente y no se pierde con esto.
-- En realidad 14 comandos son muchos. Muchos de los archivos yaml se pueden consolidar, hacer scripts. Si lo intentan, por favor, déjenme saber en avaco.digital@ gmail.com
+- En realidad 14 comandos son muchos. Los archivos yaml se pueden consolidar, hacer scripts. Si lo intentan, por favor, déjenme saber en avaco.digital@ gmail.com
 
   
 
