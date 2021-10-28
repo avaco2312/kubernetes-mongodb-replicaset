@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: mongo
+  replicas: 3
+  selector:
+      matchLabels:
+        app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec: 
+      volumes:
+      - name: config
+        configMap:
+          name: "mongo-init" 
+      - name: vdata
+        hostPath:
+          path: /vdata        
+      containers:
+      - name: mongo
+        image: mongo
+        imagePullPolicy: Never        
+        command:
+        - bash
+        - /config/init.sh
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: vdata
+          mountPath: /data/db
+          subPathExpr: $(POD_NAME)          
+        resources:
+            limits:
+              cpu: 200m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: user
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: mongo-secret
+                key: pass
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name  
+        ports:
+        - containerPort:  27017
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command:
+            - mongo
+            - --eval
+            - db.serverStatus()
+          initialDelaySeconds: 10
+          timeoutSeconds: 10  
+
+
+          

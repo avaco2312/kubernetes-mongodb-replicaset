@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  go-client
+  namespace: default
+  labels:
+    app:  go-client
+spec:
+  selector:
+    matchLabels:
+      app: go-client
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  go-client
+    spec:
+      containers:
+      - name:  go-client
+        image:  go-mongo-client
+        imagePullPolicy: Never
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort:  8080
+          name:  http
+      restartPolicy: Always
+

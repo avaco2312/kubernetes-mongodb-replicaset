@@ -1,0 +1,27 @@
+1) kind create cluster --config=config.yaml
+2) kind load docker-image mongo
+3) kubectl apply -f secret-mongo.yaml
+4) kubectl apply -f mongodb-configmap.yaml
+5) kubectl apply -f mongo-svc-0.yaml
+6) kubectl apply -f mongo-svc-1.yaml
+7) kubectl apply -f mongo-svc-2.yaml
+8) kubectl apply -f mongo-sfs.yaml
+9) kind load docker-image go-mongo-client
+10) kubectl apply -f go-client-dpy.yaml
+11) kubectl apply -f go-client-svc.yaml
+12) kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+13) kubectl wait --namespace ingress-nginx ^
+    --for=condition=ready pod ^
+    --selector=app.kubernetes.io/component=controller ^
+    --timeout=90s
+14) kubectl apply -f ingress.yaml
+
+
+
+
+
+
+
+
+
+
