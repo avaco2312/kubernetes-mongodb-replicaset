@@ -40,6 +40,10 @@ La secuencia de comandos para la implementación está en el archivo comandos.tx
 - O todos los pods:
 ```
     kubectl delete statefulset mongo
+    
+    y los relanzamos con:
+    
+    kubectl apply -f mongo-sfs.yaml
 ```
 - En estos casos la base de datos permanece operativa y se reconstruye (a lo mejor una petición demora algo mientras se reconfigura el cluster y el réplica set de MongoDB)
 - O terminar el cluster Kubernetes y volverlo a desplegar para comprobar que la BD es permanente y no se pierde con esto.
