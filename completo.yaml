@@ -67,6 +67,7 @@ spec:
   ports:
     - protocol: TCP
       port: 27017
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
