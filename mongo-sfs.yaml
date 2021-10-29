@@ -65,7 +65,7 @@ spec:
             - mongo
             - --eval
             - db.serverStatus()
-          initialDelaySeconds: 10
+          initialDelaySeconds: 180
           timeoutSeconds: 10  
 
 

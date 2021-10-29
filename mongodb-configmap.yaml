@@ -6,9 +6,11 @@ data:
   init.sh: |
     #!/bin/bash
     inicia() {
-      sleep 60
-      if [[ "${HOSTNAME}" == 'mongo-0' ]]; then
-        mongo --eval="printjson(rs.initiate( \
+      # Wait for last replica ready
+      until mongo mongo-2 --eval 'printjson(db.serverStatus())'; do
+        sleep 2
+      done
+      mongo --eval="printjson(rs.initiate( \
           { \
             '_id' : 'rs0', \
             members: [ \
@@ -17,9 +19,9 @@ data:
               { '_id': 2, host: 'mongo-2:27017' } \
             ] \
           }))"
-      fi  
     }
-    inicia &
+    if [[ "${HOSTNAME}" == 'mongo-0' ]]; then
+      inicia &
+    fi    
     mongod --replSet rs0 --bind_ip localhost,${HOSTNAME}
-
-
+    

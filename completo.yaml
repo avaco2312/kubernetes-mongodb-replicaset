@@ -1,38 +1,4 @@
 apiVersion: v1
-data:
-  user: cm9vdA==
-  pass: ZXhhbXBsZQ==
-kind: Secret
-metadata:
-  name: mongo-secret
-  namespace: default
-type: Opaque
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mongo-init
-data:
-  init.sh: |
-    #!/bin/bash
-    inicia() {
-      sleep 20
-      if [[ "${HOSTNAME}" == 'mongo-0' ]]; then
-        mongo --eval="printjson(rs.initiate( \
-          { \
-            '_id' : 'rs0', \
-            members: [ \
-              { '_id': 0, host: 'mongo-0:27017' }, \
-              { '_id': 1, host: 'mongo-1:27017' }, \
-              { '_id': 2, host: 'mongo-2:27017' } \
-            ] \
-          }))"
-      fi  
-    }
-    inicia &
-    mongod --replSet rs0 --bind_ip localhost,${HOSTNAME}
----
-apiVersion: v1
 kind: Service
 metadata:
   name: mongo-0
@@ -67,6 +33,43 @@ spec:
   ports:
     - protocol: TCP
       port: 27017
+---
+apiVersion: v1
+data:
+  user: cm9vdA==
+  pass: ZXhhbXBsZQ==
+kind: Secret
+metadata:
+  name: mongo-secret
+  namespace: default
+type: Opaque
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-init
+data:
+  init.sh: |
+    #!/bin/bash
+    inicia() {
+      # Wait for last replica ready
+      until mongo mongo-2 --eval 'printjson(db.serverStatus())'; do
+        sleep 2
+      done
+      mongo --eval="printjson(rs.initiate( \
+          { \
+            '_id' : 'rs0', \
+            members: [ \
+              { '_id': 0, host: 'mongo-0:27017' }, \
+              { '_id': 1, host: 'mongo-1:27017' }, \
+              { '_id': 2, host: 'mongo-2:27017' } \
+            ] \
+          }))"
+    }
+    if [[ "${HOSTNAME}" == 'mongo-0' ]]; then
+      inicia &
+    fi    
+    mongod --replSet rs0 --bind_ip localhost,${HOSTNAME}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -135,7 +138,7 @@ spec:
             - mongo
             - --eval
             - db.serverStatus()
-          initialDelaySeconds: 10
+          initialDelaySeconds: 180
           timeoutSeconds: 10  
 ---
 apiVersion: apps/v1

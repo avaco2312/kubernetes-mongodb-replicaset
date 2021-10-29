@@ -1,10 +1,10 @@
 1) kind create cluster --config=config.yaml
-2) kind load docker-image mongo
-3) kubectl apply -f secret-mongo.yaml
-4) kubectl apply -f mongodb-configmap.yaml
-5) kubectl apply -f mongo-svc-0.yaml
-6) kubectl apply -f mongo-svc-1.yaml
-7) kubectl apply -f mongo-svc-2.yaml
+2) kubectl apply -f mongo-svc-0.yaml
+3) kubectl apply -f mongo-svc-1.yaml
+4) kubectl apply -f mongo-svc-2.yaml
+5) kind load docker-image mongo
+6) kubectl apply -f secret-mongo.yaml
+7) kubectl apply -f mongodb-configmap.yaml
 8) kubectl apply -f mongo-sfs.yaml
 9) kind load docker-image go-mongo-client
 10) kubectl apply -f go-client-dpy.yaml
