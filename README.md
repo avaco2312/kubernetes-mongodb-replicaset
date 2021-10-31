@@ -41,7 +41,9 @@ La secuencia de comandos para la implementación está en el archivo comandos.tx
 ```
     kubectl delete statefulset mongo
 ```
-    y los relanzamos con:
+
+y los relanzamos con:
+
 ```    
     kubectl apply -f mongo-sfs.yaml
 ```
