@@ -17,13 +17,13 @@ nodes:
     protocol: TCP
 - role: worker
   extraMounts:
-    - hostPath: F:\mongodb-cluster\data
+    - hostPath: F:\Kubernetes\kubernetes-mongodb-replicaset\data
       containerPath: /vdata
 - role: worker
   extraMounts:
-    - hostPath: F:\mongodb-cluster\data
+    - hostPath: F:\Kubernetes\kubernetes-mongodb-replicaset\data
       containerPath: /vdata
 - role: worker
   extraMounts:
-    - hostPath: F:\mongodb-cluster\data
+    - hostPath: F:\Kubernetes\kubernetes-mongodb-replicaset\data
       containerPath: /vdata
